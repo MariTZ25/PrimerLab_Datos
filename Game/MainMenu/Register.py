@@ -84,8 +84,9 @@ class Register:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_pos = pygame.mouse.get_pos()
                 if self.RegisterButton.is_clicked(mouse_pos):
-                    self.Register()
-                    return "Register"
+                    if (self.confirm_password_text == self.password_text) and not self.user_exists(self.username_text):
+                        self.Register()
+                        return "exit"
                 elif self.LogInButton.is_clicked(mouse_pos):
                     return "LogIn"
                 elif self.BackButton.is_clicked(mouse_pos):
@@ -139,3 +140,13 @@ class Register:
 
         with open(archivo, "a", encoding="utf-8") as f:
             f.write(f"{self.username_text},{self.password_text}\n")
+    
+    def user_exists(self, username):
+        try:
+            with open("Repositories/Usuarios.csv", "r", encoding="utf-8") as f:
+                for line in f.readlines()[1:]:
+                    if line.split(",")[0] == username:
+                        return True
+        except FileNotFoundError:
+            return False
+        return False

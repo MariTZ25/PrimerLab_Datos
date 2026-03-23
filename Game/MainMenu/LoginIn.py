@@ -74,8 +74,8 @@ class LoginInterface:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_pos = pygame.mouse.get_pos()
                 if self.LogInButton.is_clicked(mouse_pos):
-                    self.login()
-                    return "LoggedIn"
+                    if self.login(self.username_text, self.password_text) == True:
+                        return "LoggedIn"
                 elif self.RegisterButton.is_clicked(mouse_pos):
                     return "Register"
                 elif self.BackButton.is_clicked(mouse_pos):
@@ -103,9 +103,22 @@ class LoginInterface:
                         self.password_text = self.password_text[:-1]
                     else:
                         self.password_text += event.unicode
-    def login(self):
 
+    def login(self, name, contra):
+        
         Path("Repositories").mkdir(exist_ok=True)
-        with open("Repositories/Usuarios", "w", encoding="utf-8") as f:
-            f.write("Encabezado\n")
-            f.writelines(["línea 1\n", "línea 2\n"])
+
+        try:
+            with open("Repositories/Usuarios.csv", "r", encoding="utf-8") as f:
+                for linea in f:
+                    username = linea.split(",")[0]
+                    contraseña = linea.split(",")[1].strip()
+                    if (username == name and contraseña == contra):
+                        return True
+                return False
+        except FileNotFoundError:
+            return False
+        return False
+
+
+            
