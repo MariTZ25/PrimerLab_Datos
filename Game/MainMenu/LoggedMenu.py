@@ -178,7 +178,7 @@ class PopUpNewRound:
             if button.is_hovered(mouse_pos):
                 size = self.scale(button.width*1.1, button.height*1.1, w, h)
                 img_scaled = pygame.transform.scale(button.img, (int(size[0]), int(size[1])))
-                interfaz.blit(img_scaled, (button.x - (size[0] - button.width) / 2, button.y - (size[1] - button.height) / 2))
+                interfaz.blit(img_scaled, (button.x , button.y))
             else:
                interfaz.blit(button.img, (button.x, button.y))
         

@@ -59,6 +59,7 @@ class Menu:
                     self.sizeH = self.scale(329, 42, w, h)[0]*1.1, self.scale(392, 42, w, h)[1]*1.1
             else:
                interfaz.blit(img_scaled, (button.x, button.y))
+               
         if self.posY != 0:
             hover_surface = pygame.Surface((self.sizeH[0], self.sizeH[1]), pygame.SRCALPHA)
             hover_surface.fill((217, 217, 217, 25))  # rgba

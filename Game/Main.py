@@ -1,7 +1,7 @@
 import pygame
 from MainMenu.Chapters import Chapters
 from MainMenu.LoggedMenu import LoggedMenu
-from MainMenu.LoggedMenu import PopUpLogOut
+from MainMenu.LoggedMenu import PopUpLogOut, PopUpNewRound
 from MainMenu.Register import Register
 from TheColorCode import TheColorCode
 import configuraciones #Si desea cambiar alguna configuración solo ve a este archivo
@@ -18,6 +18,7 @@ height_pestana = info.current_h
 login_interface = None
 register_interface = None
 MenuLogged = None
+NewRound = None
 LogOut = None
 Capitulos = None
 ColorCode = None
@@ -45,9 +46,11 @@ while run:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if not login:
                 opcion = menu.Option(event)
-            else:
+            elif opcion==6:
+                opcion = Capitulos.Option(event)
+            elif login:
                 opcion = MenuLogged.Option(event)
-
+              
             if opcion == 1:
                 login_interface = Login()
             elif opcion==2:
@@ -59,8 +62,30 @@ while run:
             elif opcion=="logout":
                 LogOut = PopUpLogOut()
             elif opcion==6:
+                NewRound=PopUpNewRound()
+            
+        if NewRound:
+            result = NewRound.Option(event)
+            if result=="Yes":
+                NewRound = None
                 Capitulos = Chapters()
+            elif result=="No":
+                NewRound=None
 
+        if Capitulos:
+            result = Capitulos.Option(event)
+            if result == "Back":
+                Capitulos = None
+            elif result == "ColorCode":
+                Capitulos = None
+                ColorCode = TheColorCode()
+            elif result == "Chapter2":
+                pass
+            elif result == "Chapter3":
+                pass
+            else:
+                pass
+            
         if LogOut:
             result = LogOut.Option(event)
             if result == "Yes":
@@ -81,7 +106,7 @@ while run:
             elif result == "Register":
                 register_interface = Register()
                 login_interface = None
-
+                    
         if register_interface:
             result = register_interface.Opciones(event)
             if result == "exit":
@@ -93,22 +118,15 @@ while run:
                 register_interface.Register()
                 register_interface = None
         
-        if Capitulos:
-            result = Capitulos.Option(event)
-            if result == "exit":
-                Capitulos = None
-            elif result == "ColorCode":
-                Capitulos = None
-                ColorCode = TheColorCode()
-            elif result == "Chapter2":
-                pass
-            elif result == "Chapter3":
-                pass
 
-    if not login:
+    if not login and not Capitulos:
         menu.draw(ventana)
-    else:
+    elif login and not Capitulos:
         MenuLogged.draw(ventana)
+    elif login and Capitulos:
+        Capitulos.draw(ventana)
+    if NewRound:
+        NewRound.draw(ventana)
     if login_interface:
         login_interface.draw(ventana)
     if register_interface:
@@ -119,4 +137,5 @@ while run:
         ColorCode.run()
     if Capitulos:
         Capitulos.draw(ventana)
+    
     pygame.display.flip()

@@ -1,18 +1,31 @@
 
 from .Button import Button as b
 import pygame
+from pathlib import Path
 
 class LoginInterface:
     def __init__(self):
-       self.BK = pygame.image.load("Game/MainMenu/img/PopUp Login.png")
+        self.font = pygame.font.Font(None, 24)
 
-       self.LogInButton = b("Game/MainMenu/img/LoginButton.png", "LogIn", 0, 0, 0 )
-       self.RegisterButton = b("Game/MainMenu/img/¿nO TIENES CUENTA_ rEGISTRATE AQUI Button.png", "Register", 0, 0, 0)
-       self.BackButton = b("Game/MainMenu/img/BackButton.png", "Back", 0, 0, 0)
-       self.Bk2 = pygame.image.load("Game/MainMenu/img/UsuarioContraseña.png")
+        self.username_text = ""
+        self.password_text = ""
 
-       self.username_entry = None
-       self.password_entry = None
+        self.active_user = False
+        self.active_pass = False
+
+        # Posiciones para escribir
+        self.user_rect = pygame.Rect(0, 0, 200, 24)
+        self.pass_rect = pygame.Rect(0, 0, 200, 24)
+
+        self.BK = pygame.image.load("Game/MainMenu/img/PopUp Login.png")
+
+        self.LogInButton = b("Game/MainMenu/img/LoginButton.png", "LogIn", 0, 0, 0 )
+        self.RegisterButton = b("Game/MainMenu/img/¿nO TIENES CUENTA_ rEGISTRATE AQUI Button.png", "Register", 0, 0, 0)
+        self.BackButton = b("Game/MainMenu/img/BackButton.png", "Back", 0, 0, 0)
+        self.Bk2 = pygame.image.load("Game/MainMenu/img/UsuarioContraseña.png")
+
+        self.username_entry = None
+        self.password_entry = None
     
     def scale(self, x, y, w, h):
         return (x * w / 1512, y * h / 982)
@@ -29,6 +42,25 @@ class LoginInterface:
        
         interfaz.blit(self.BK, (interfaz.get_width() // 2 - self.BK.get_width() // 2, interfaz.get_height() // 4))
         interfaz.blit(self.Bk2, (interfaz.get_width() // 2 - self.BK.get_width() // 2 + 10+32+12, interfaz.get_height() // 4 + 10+12+32))
+
+        base_x = interfaz.get_width() // 2 - self.BK.get_width() // 2 + 10+32+12
+        base_y = interfaz.get_height() // 4 + 10+12+32+108
+
+        # Usuario
+        user_surface = self.font.render(self.username_text, True, (0,0,0))
+        interfaz.blit(user_surface, (self.user_rect.x + 5, self.user_rect.y + 5))
+
+        # Contraseña (oculta con *)
+        hidden_pass = "*" * len(self.password_text)
+        pass_surface = self.font.render(hidden_pass, True, (0,0,0))
+        interfaz.blit(pass_surface, (self.pass_rect.x + 5, self.pass_rect.y + 5))
+
+        # Ajusta estos números a donde están los campos en tu imagen
+        self.user_rect.topleft = (base_x + 20, base_y + 20)
+        self.pass_rect.topleft = (base_x + 20, base_y + 70+28)
+
+        pygame.draw.rect(interfaz, (255,0,0), self.user_rect, 2)
+        pygame.draw.rect(interfaz, (0,255,0), self.pass_rect, 2)
 
         interfaz.blit(self.LogInButton.img, (self.LogInButton.x, self.LogInButton.y))
         interfaz.blit(self.RegisterButton.img, (self.RegisterButton.x, self.RegisterButton.y))
@@ -48,5 +80,32 @@ class LoginInterface:
                     return "Register"
                 elif self.BackButton.is_clicked(mouse_pos):
                     return "exit"
+                
+                if self.user_rect.collidepoint(event.pos):
+                    self.active_user = True
+                    self.active_pass = False
+                elif self.pass_rect.collidepoint(event.pos):
+                    self.active_pass = True
+                    self.active_user = False
+                else:
+                    self.active_user = False
+                    self.active_pass = False
+
+            if event.type == pygame.KEYDOWN:
+                if self.active_user:
+                    if event.key == pygame.K_BACKSPACE:
+                        self.username_text = self.username_text[:-1]
+                    else:
+                        self.username_text += event.unicode
+
+                if self.active_pass:
+                    if event.key == pygame.K_BACKSPACE:
+                        self.password_text = self.password_text[:-1]
+                    else:
+                        self.password_text += event.unicode
     def login(self):
-        pass
+
+        Path("Repositories").mkdir(exist_ok=True)
+        with open("Repositories/Usuarios", "w", encoding="utf-8") as f:
+            f.write("Encabezado\n")
+            f.writelines(["línea 1\n", "línea 2\n"])
