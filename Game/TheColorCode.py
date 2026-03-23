@@ -10,7 +10,7 @@ class TheColorCode:
 
         self.libro_image=[]
         for i in range(9):
-            img=pygame.image.load(f"media//elementos//libros//libro{i+1}.png")
+            img=pygame.image.load(f"Game/media//elementos//libros//libro{i+1}.png")
             self.libro_image.append(img)
 
         self.running = True
@@ -22,7 +22,7 @@ class TheColorCode:
         #Lo usaré para controlar la velocidad del movimiento
         self.reloj=pygame.time.Clock()
 
-        self.fondo= pygame.image.load("media//fondos//fondoRepisa.png").convert()
+        self.fondo= pygame.image.load("Game/media//fondos//fondoRepisa.png").convert()
 
         #Seleccionar el objeto con el mouse (arrastrarlo)
         self.seleccionado=None
