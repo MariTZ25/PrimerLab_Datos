@@ -4,6 +4,7 @@ from MainMenu.LoggedMenu import LoggedMenu
 from MainMenu.LoggedMenu import PopUpLogOut, PopUpNewRound
 from MainMenu.Register import Register
 from TheColorCode import TheColorCode
+from MainMenu.Config import Config
 import configuraciones #Si desea cambiar alguna configuración solo ve a este archivo
 from libro import Libro
 from MainMenu.Menu import Menu
@@ -20,6 +21,7 @@ register_interface = None
 MenuLogged = None
 NewRound = None
 LogOut = None
+configuracion=None
 Capitulos = None
 ColorCode = None
 
@@ -56,13 +58,18 @@ while run:
             elif opcion==2:
                 register_interface = Register()
             elif opcion==3:
-                pass
+                configuracion = Config()
             elif opcion==4:
                 pass
             elif opcion=="logout":
                 LogOut = PopUpLogOut()
             elif opcion==6:
                 NewRound=PopUpNewRound()
+                
+        if configuracion:
+            result = configuracion.Option(event)
+            if result =="Back":
+                configuracion = None
             
         if NewRound:
             result = NewRound.Option(event)
@@ -117,6 +124,7 @@ while run:
             elif result == "Register":
                 register_interface.Register()
                 register_interface = None
+                
         
 
     if not login and not Capitulos:
@@ -133,9 +141,11 @@ while run:
         register_interface.draw(ventana)
     if LogOut:
         LogOut.draw(ventana)
-    if ColorCode:
-        ColorCode.run()
+    if configuracion:
+        configuracion.draw(ventana)
     if Capitulos:
         Capitulos.draw(ventana)
+    if ColorCode:
+        ColorCode.run()
     
     pygame.display.flip()

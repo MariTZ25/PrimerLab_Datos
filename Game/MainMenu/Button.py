@@ -11,13 +11,21 @@ class Button:
 
         self.width = width if width and width > 0 else self.img.get_width()
         self.height = height if height and height > 0 else self.img.get_height()
+
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
     
     def is_clicked(self, pos):
         if self.x <= pos[0] <= self.x + self.width and self.y <= pos[1] <= self.y + self.height:
             return True
         return False
     
+    def is_clicked2(self, pos):
+        return self.rect.collidepoint(pos)
+    
     def is_hovered(self, pos):
         if self.x <= pos[0] <= self.x + self.width and self.y <= pos[1] <= self.y + self.height:
             return True
         return False
+    def is_hovered2(self, pos):
+        return self.rect.collidepoint(pos)
+    

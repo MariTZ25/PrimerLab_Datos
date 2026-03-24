@@ -55,12 +55,12 @@ class LoginInterface:
         pass_surface = self.font.render(hidden_pass, True, (0,0,0))
         interfaz.blit(pass_surface, (self.pass_rect.x + 5, self.pass_rect.y + 5))
 
-        # Ajusta estos números a donde están los campos en tu imagen
+
         self.user_rect.topleft = (base_x + 20, base_y + 20)
         self.pass_rect.topleft = (base_x + 20, base_y + 70+28)
 
-        pygame.draw.rect(interfaz, (255,0,0), self.user_rect, 2)
-        pygame.draw.rect(interfaz, (0,255,0), self.pass_rect, 2)
+      #  pygame.draw.rect(interfaz, (255,0,0), self.user_rect, 2)
+      #  pygame.draw.rect(interfaz, (0,255,0), self.pass_rect, 2)
 
         interfaz.blit(self.LogInButton.img, (self.LogInButton.x, self.LogInButton.y))
         interfaz.blit(self.RegisterButton.img, (self.RegisterButton.x, self.RegisterButton.y))
@@ -105,7 +105,7 @@ class LoginInterface:
                         self.password_text += event.unicode
 
     def login(self, name, contra):
-        
+
         Path("Repositories").mkdir(exist_ok=True)
 
         try:

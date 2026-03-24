@@ -68,9 +68,9 @@ class Register:
         self.pass_rect.topleft = (base_x + 20, base_y + 70+30)
         self.confirmpass_rect.topleft = (base_x + 20, base_y + 70+20+70+20)
 
-        pygame.draw.rect(interfaz, (255,0,0), self.user_rect, 2)
-        pygame.draw.rect(interfaz, (0,255,0), self.pass_rect, 2)
-        pygame.draw.rect(interfaz, (0,0, 255), self.confirmpass_rect, 2)
+       # pygame.draw.rect(interfaz, (255,0,0), self.user_rect, 2)
+        #pygame.draw.rect(interfaz, (0,255,0), self.pass_rect, 2)
+       # pygame.draw.rect(interfaz, (0,0, 255), self.confirmpass_rect, 2)
 
         interfaz.blit(self.LogInButton.img, (self.LogInButton.x, self.LogInButton.y))
         interfaz.blit(self.RegisterButton.img, (self.RegisterButton.x, self.RegisterButton.y))

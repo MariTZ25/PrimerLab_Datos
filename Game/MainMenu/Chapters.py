@@ -58,7 +58,7 @@ class Chapters:
 
         mouse_pos = pygame.mouse.get_pos()
 
-        hover_found = False  # 🔥 clave
+        hover_found = False  
 
         for button in self.buttons:
             button.x, button.y = self.scale(button.base_x, button.base_y, w, h)
