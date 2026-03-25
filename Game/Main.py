@@ -25,6 +25,15 @@ configuracion=None
 Capitulos = None
 ColorCode = None
 
+
+config = Config()
+
+music = config.music
+ambience = config.ambience
+sensibildad=config.sensibildad
+keyboard = config.keyboard
+brillo=config.brillo
+
 ventana = pygame.display.set_mode((width_pestana, height_pestana))
 pygame.display.set_caption("Dentro del Espectro")
 opcion = 0
@@ -46,11 +55,11 @@ while run:
             run = False
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if not login:
+            if not login and not configuracion:
                 opcion = menu.Option(event)
             elif opcion==6:
                 opcion = Capitulos.Option(event)
-            elif login:
+            elif login and not configuracion:
                 opcion = MenuLogged.Option(event)
               
             if opcion == 1:
@@ -63,6 +72,13 @@ while run:
                 pass
             elif opcion=="logout":
                 LogOut = PopUpLogOut()
+            elif opcion==5:
+                game = TheColorCode()
+                if game.cargar_partida():
+                    game.run()
+                else:
+                    print("No hay partida guardada")
+                                
             elif opcion==6:
                 NewRound=PopUpNewRound()
                 
@@ -143,9 +159,24 @@ while run:
         LogOut.draw(ventana)
     if configuracion:
         configuracion.draw(ventana)
+        music = configuracion.music
+        brillo = configuracion.brillo
+        sensibildad = configuracion.sensibildad
+        keyboard = configuracion.keyboard
+        ambience = configuracion.ambience
+
     if Capitulos:
         Capitulos.draw(ventana)
     if ColorCode:
         ColorCode.run()
+
+    
+    overlay = pygame.Surface((width_pestana, height_pestana))
+    overlay.fill((0, 0, 0))
+
+    alpha = int((1 - brillo) * 200)  # puedes ajustar 200
+    overlay.set_alpha(alpha)
+
+    ventana.blit(overlay, (0, 0))
     
     pygame.display.flip()
