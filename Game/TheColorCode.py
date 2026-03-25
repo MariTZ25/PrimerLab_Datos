@@ -8,6 +8,7 @@ tabla_partida = HashTable()
 
 class TheColorCode:
    
+   
     def __init__(self):
 
         self.config = Config()
@@ -36,9 +37,22 @@ class TheColorCode:
         
         self.crearCondicion()
             
+            
+            #Le asigno un color a cada libro
+        self.nombres_libros = [
+            "Rojo", "Naranja", "Rosa", "Amarillo",
+            "Verde", "Celeste", "Azul", "Azul oscuro", "Morado"
+        ]
+        
+        self.crearCondicion()
+            
         self.running = True
         self.objetos=[]
         for i in range(9):
+            x, y = self.scale(510 + i*60, 400)
+            libro = Libro(x, y, self.libro_image[i])
+            libro.nombre = self.nombres_libros[i]
+            self.objetos.append(libro)
             x, y = self.scale(510 + i*60, 400)
             libro = Libro(x, y, self.libro_image[i])
             libro.nombre = self.nombres_libros[i]
@@ -91,6 +105,7 @@ class TheColorCode:
         #Seleccionar el objeto con el mouse (arrastrarlo)
         self.seleccionado=None
         #Para que cuando lo toque con el mouse no se vaya lejos
+        #Para que cuando lo toque con el mouse no se vaya lejos
         self.offset_x = 0
         self.offset_y = 0 #son posiciones relativas
 
@@ -103,7 +118,59 @@ class TheColorCode:
     def scale(self, x, y):
         return (x * self.width / self.base_w, y * self.height / self.base_h)
 
+        self.terminado = False
+        self.Ganar = False
+
+        self.tiempo_inicio = pygame.time.get_ticks()  # timer
+        self.duracion = 30000  # timer
+
+    def scale(self, x, y):
+        return (x * self.width / self.base_w, y * self.height / self.base_h)
+
     def run(self):
+
+        while self.running:                 
+            self.reloj.tick(60)
+            
+            w, h = self.ventana.get_size()
+
+            tiempo_actual = pygame.time.get_ticks()
+            tiempo_restante = self.duracion - (tiempo_actual - self.tiempo_inicio)
+
+            if tiempo_restante <= 0:
+                print("Se acabó el tiempo")
+                self.result=False
+                from pantalla_final import PantallaFinal
+                pantalla = PantallaFinal(False, self.width, self.height, self.base_w, self.base_h)
+                pantalla.run()
+                self.running = False
+
+            fondo_scaled = pygame.transform.smoothscale(self.fondo, (w, h))
+            self.ventana.blit(fondo_scaled, (0,0))
+
+            self.ventana.blit(self.finish, (self.finish_shape.x, self.finish_shape.y))
+
+            pygame.draw.rect(self.ventana, ((224, 186, 224)), self.exit_shape)
+            texto_exit = self.font_exit.render("Salir", True, (255,255,255))
+            self.ventana.blit(texto_exit, (self.exit_shape.x + 14, self.exit_shape.y + 4))
+
+            segundos = max(0, tiempo_restante // 1000)
+            texto_timer = self.font.render(f"Tiempo: {segundos}", True, (232, 21, 232))
+            self.ventana.blit(texto_timer, (50, 100))
+
+            margen = 300
+            espacio = 20
+            y_texto = self.scale(0, 50)[1]
+
+            x_actual = margen
+            for texto in self.textos:
+                if x_actual + texto.get_width() > self.width - margen:
+                    x_actual = margen
+                    y_texto += texto.get_height() + 10
+
+                self.ventana.blit(texto, (x_actual, y_texto))
+                x_actual += texto.get_width() + espacio
+
 
         while self.running:                 
             self.reloj.tick(60)
@@ -161,11 +228,20 @@ class TheColorCode:
                 int(20 * w / self.base_w),
                 2
             )
+            pygame.draw.circle(
+                self.ventana,
+                (255,255,255),
+                (x,y),
+                int(20 * w / self.base_w),
+                2
+            )
 
             pygame.display.update()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    self.running=False
+
                     self.running=False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -187,6 +263,17 @@ class TheColorCode:
                                 self.objetos.remove(obj)
                                 self.objetos.append(obj)
                                 break
+                        movidos = [self.seleccionado]
+                        cambio = True
+                        while cambio:
+                            cambio = False
+                            for obj in self.objetos:
+                             for otro in self.objetos:
+                              if obj != otro and obj.shape.colliderect(otro.shape):
+                                if obj not in movidos:
+                                    otro.shape.x = obj.shape.right + 0.2
+                                    movidos.append(obj)
+                                    cambio = True
 
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
