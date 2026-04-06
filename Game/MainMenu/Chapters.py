@@ -94,7 +94,7 @@ class Chapters:
     def Option(self, event):
         pos = pygame.mouse.get_pos()
         for i, button in enumerate(self.buttons):
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if button.is_clicked(pos):
                     print(button.name)
 
@@ -104,3 +104,5 @@ class Chapters:
                         return "ColorCode"
                     if button.name == "MusicalCode":
                         return "MusicalCode"
+        return None
+

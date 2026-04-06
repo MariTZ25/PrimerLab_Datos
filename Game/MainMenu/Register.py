@@ -3,11 +3,11 @@ from pathlib import Path
 
 from .Button import Button as b
 import pygame
+from HashTable import HashTable
 
 class Register:
-    def __init__(self):
+    def __init__(self, usuarios):
         self.font = pygame.font.Font(None, 24)
-
         self.username_text = ""
         self.password_text = ""
         self.confirm_password_text = ""
@@ -27,6 +27,7 @@ class Register:
         self.LogInButton = b("Game/MainMenu/img/¿Ya tienes cuenta_ Inicia Sesión aqui Button.png", "LogIn", 0, 0, 0)
         self.BackButton = b("Game/MainMenu/img/BackButton.png", "Back", 0, 0, 0)
         self.Bk2 = pygame.image.load("Game/MainMenu/img/UsuarioContraseñaConfirmarContra.png")
+        self.usuarios = usuarios
     
     def scale(self, x, y, w, h):
         return (x * w / 1512, y * h / 982)
@@ -136,17 +137,14 @@ class Register:
         # Si el archivo no existe, crear con encabezado
         if not Path(archivo).exists():
             with open(archivo, "w", encoding="utf-8") as f:
-                f.write("username,password\n")
+                f.write("")
 
         with open(archivo, "a", encoding="utf-8") as f:
             f.write(f"{self.username_text},{self.password_text}\n")
+        
+        self.usuarios.insert(self.username_text, self.password_text)
     
     def user_exists(self, username):
-        try:
-            with open("Repositories/Usuarios.csv", "r", encoding="utf-8") as f:
-                for line in f.readlines()[1:]:
-                    if line.split(",")[0] == username:
-                        return True
-        except FileNotFoundError:
-            return False
+        if self.usuarios.get(username):
+            return True
         return False

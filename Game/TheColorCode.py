@@ -1,8 +1,12 @@
+import json
 import pygame
-from HashTable import HashTable
+import sys
 from libro import Libro
 import random
 from MainMenu.Config import Config
+sys.path.append("Persistence")
+from HashTable import HashTable
+
 
 tabla_partida = HashTable()
 
@@ -295,13 +299,17 @@ class TheColorCode:
             "colores": self.colores
         }
 
-        tabla_partida.insert("partida", estado)
+        estado_str = json.dumps(estado)
+        tabla_partida.insert("partida", estado_str)
+        tabla_partida.hashtable_to_csv("Repositories/Partida.csv")
     
     def cargar_partida(self):
-        estado = tabla_partida.get("partida")
+        estado_str = tabla_partida.get("partida")
 
-        if estado is None:
+        if estado_str is None:
             return False
+
+        estado = json.loads(estado_str)
 
         self.objetos = []
 

@@ -1,7 +1,10 @@
 import pygame
-from HashTable import HashTable
+import sys
 import random
 from MainMenu.Config import Config
+import json
+sys.path.append("Persistence")
+from HashTable import HashTable
 
 tabla_partida = HashTable()
 
@@ -235,3 +238,24 @@ class musicalCode:
                                 else:
                                     self.mostrar.append((self.img_error, self.rect_actual, pygame.time.get_ticks()))
                                     self.input_usuario = []
+                        
+   def guardar_partida(self):
+        data = {
+            "secuencia": self.secuencia,
+            "silencios": self.silencios,
+            "input_usuario": self.input_usuario,
+            "tiempo_restante": max(0, self.duracion - (pygame.time.get_ticks() - self.tiempo_inicio)),
+            "Ganar": self.Ganar
+        }
+        data_str = json.dumps(data)
+        tabla_partida.insert("musicalCode", data_str)
+        tabla_partida.hashtable_to_csv("Repositories/Partida.csv")
+   def cargar_partida(self):
+        partida_str = tabla_partida.get("musicalCode")
+        if partida_str:
+            partida = json.loads(partida_str)
+            self.secuencia = partida["secuencia"]
+            self.silencios = partida["silencios"]
+            self.input_usuario = partida["input_usuario"]
+            self.tiempo_inicio = pygame.time.get_ticks() - (self.duracion - partida["tiempo_restante"])
+            self.Ganar = partida["Ganar"]

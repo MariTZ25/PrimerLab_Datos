@@ -99,7 +99,8 @@ class LoggedMenu:
                     return "logout"
                 if button.name == "Continue":                    
                     return 5
-                if button.name == "NewRound":                    
+                if button.name == "NewRound":     
+                    self.newRound = True               
                     return 6
 
                 return i + 1
@@ -140,6 +141,7 @@ class PopUpLogOut:
                 img_scaled = pygame.transform.scale(button.img, size)
                 interfaz.blit(img_scaled, (button.x - (size[0] - button.width) // 2, button.y - (size[1] - button.height) // 2))
             else:
+              img_scaled = pygame.transform.scale(button.img, (button.width, button.height))
               interfaz.blit(img_scaled, (button.x, button.y))
         
     def Option(self, event):

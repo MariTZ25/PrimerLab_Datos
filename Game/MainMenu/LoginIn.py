@@ -1,10 +1,12 @@
-
+import sys
 from .Button import Button as b
 import pygame
 from pathlib import Path
+sys.path.append("Persistence")
+from HashTable import HashTable
 
 class LoginInterface:
-    def __init__(self):
+    def __init__(self, usuarios):
 
         #Efectos de sonido
         pygame.mixer.music.load("Music/menuMusica.mp3")
@@ -13,6 +15,8 @@ class LoginInterface:
         self.sonido_clickEspecial= pygame.mixer.Sound("Music/botonElegido.mp3")
         self.sonido_señalar= pygame.mixer.Sound("Music/señalar.mp3")
         self.font = pygame.font.Font(None, 24)
+
+        self.usuarios = usuarios
 
         self.username_text = ""
         self.password_text = ""
@@ -33,6 +37,7 @@ class LoginInterface:
 
         self.username_entry = None
         self.password_entry = None
+
     
     def scale(self, x, y, w, h):
         return (x * w / 1512, y * h / 982)
@@ -116,19 +121,9 @@ class LoginInterface:
 
     def login(self, name, contra):
 
-        Path("Repositories").mkdir(exist_ok=True)
-
-        try:
-            with open("Repositories/Usuarios.csv", "r", encoding="utf-8") as f:
-                for linea in f:
-                    username = linea.split(",")[0]
-                    contraseña = linea.split(",")[1].strip()
-                    if (username == name and contraseña == contra):
-                        return True
-                return False
-        except FileNotFoundError:
-            return False
+        stored_password = self.usuarios.get(name)
+        if stored_password is not None and stored_password == contra:
+            return True
         return False
-
 
             
